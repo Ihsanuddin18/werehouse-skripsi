@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-    <title>Dashboard &rsaquo; Permintaan Logistik &mdash; Werehouse BPBD | Kabupaten Jember</title>
+    <title>Dashboard &rsaquo; Rekomendasi Stok &mdash; Werehouse BPBD | Kabupaten Jember</title>
 
     <link rel="shortcut icon" href="{{ asset('landingpages') }}/assets/images/logo/logobpbd1.png" type="image/png" />
 
@@ -24,6 +24,20 @@
 
         gtag('config', 'UA-94034622-3');
     </script>
+     <style>
+        /* Warna baris berdasarkan status */
+        .row-aman {
+            background-color: #e8f8f0 !important; /* hijau muda */
+        }
+        .row-warning {
+            background-color: #fdeaea !important; /* merah muda */
+        }
+
+        /* Hover effect untuk kenyamanan visual */
+        .table-hover tbody tr:hover {
+            background-color: #f3f6f9 !important;
+        }
+    </style>
 
 </head>
 
@@ -157,8 +171,8 @@
                                 <span>Logistik Keluar</span></a>
                         </li>
                         <li class=active>
-                            <a href="{{ route('logisticrequests')}}" class="nav-link"><i class="fas fa-truck"></i>
-                                <span>Permintaan Logistik</span></a>
+                            <a href="{{ route('logisticrequests')}}" class="nav-link"><i class="fas fa-chart-line"></i>
+                                <span>Rekomendasi Stok</span></a>
                         </li>
                         <li class="menu-header">Pengaturan</li>
                         <li>
@@ -180,37 +194,99 @@
             <div class="main-content">
                 <section class="section">
                     <div class="section-header">
-                        <h1>Permintaan Logistik </h1>
+                        <h1>Rekomendasi Stok </h1>
                         <div class="section-header-breadcrumb">
                             <div class="breadcrumb-item active"><a href="{{ route('home') }}">Dashboard</a></div>
-                            <div class="breadcrumb-item">Permintaan Logistik </div>
+                            <div class="breadcrumb-item">Rekomendasi Stok </div>
                         </div>
                     </div>
-                    <form method="GET" action="{{ route('logisticrequests.index') }}" class="form-inline">
-                        <div class="form-group mb-2">
-                            <label for="month" class="mr-2">Bulan:</label>
-                            <select name="month" id="month" class="form-control mr-2">
-                                <option value="">Pilih Bulan</option>
-                                @foreach(range(1, 12) as $month)
-                                    <option value="{{ $month }}" {{ request('month') == $month ? 'selected' : '' }}>
-                                        {{ ['Januari', 'Februari', 'Maret', 'April', 'Mei', 'Juni', 'Juli', 'Agustus', 'September', 'Oktober', 'November', 'Desember'][$month - 1] }}
-                                    </option>
-                                @endforeach
-                            </select>
+                
+                     <!-- Statistics Rekomendasi Stok -->
+                      <!-- <div class="row">
+                        <div class="col-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h4>Statistics</h4>
+                                    <div class="card-header-action">
+                                        <a href="#" class="btn active">Week</a>
+                                        <a href="#" class="btn">Month</a>
+                                        <a href="#" class="btn">Year</a>
+                                    </div>
+                                </div>
+                                <div class="card-body">
+                                  <canvas id="myChart2" height="90"></canvas>
+
+
+                                    <div class="statistic-details mt-3">
+                                        <div class="statistic-details-item">
+                                            <div class="text-small text-muted">
+                                                <span class="text-primary">
+                                                    <i class="fas fa-caret-up"></i>
+                                                </span> 7%
+                                            </div>
+                                            <div class="detail-value">$243</div>
+                                            <div class="detail-name">Today</div>
+                                        </div>
+                                        <div class="statistic-details-item">
+                                            <div class="text-small text-muted">
+                                                <span class="text-danger">
+                                                    <i class="fas fa-caret-down"></i>
+                                                </span> 23%
+                                            </div>
+                                            <div class="detail-value">$2,902</div>
+                                            <div class="detail-name">This Week</div>
+                                        </div>
+                                        <div class="statistic-details-item">
+                                            <div class="text-small text-muted">
+                                                <span class="text-primary">
+                                                    <i class="fas fa-caret-up"></i>
+                                                </span> 9%
+                                            </div>
+                                            <div class="detail-value">$12,821</div>
+                                            <div class="detail-name">This Month</div>
+                                        </div>
+                                        <div class="statistic-details-item">
+                                            <div class="text-small text-muted">
+                                                <span class="text-primary">
+                                                    <i class="fas fa-caret-up"></i>
+                                                </span> 19%
+                                            </div>
+                                            <div class="detail-value">$92,142</div>
+                                            <div class="detail-name">This Year</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="form-group mb-2">
+                    </div> -->
+                    <!-- End Statistics rekomendasi -->
+                    
+                        <!-- Pilihan Halaman -->
+                    <!-- <div class="btn-group">
+                        <a href="" class="btn btn-outline-primary">Daftar Rekomendasi</a>
+                        <a href="" class="btn btn-outline-primary">Statistics</a>
+
+                    </div> -->
+
+                    <!-- Filter & Export -->
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <form method="GET" action="{{ route('logisticrequests.index') }}" class="form-inline">
                             <label for="year" class="mr-2">Tahun:</label>
                             <select name="year" id="year" class="form-control mr-2">
-                                <option value="">Pilih Tahun</option>
-                                @foreach(range($firstYear, date('Y')) as $year)
-                                    <option value="{{ $year }}" {{ request('year') == $year ? 'selected' : '' }}>
-                                        {{ $year }}
-                                    </option>
+                                @foreach(range($firstYear, date('Y') + 10) as $y)
+                                    <option value="{{ $y }}" {{ $tahun == $y ? 'selected' : '' }}>{{ $y }}</option>
                                 @endforeach
                             </select>
-                        </div>
-                        <button type="submit" class="btn btn-primary mb-2">Filter</button>
-                    </form>
+                            <button type="submit" class="btn btn-primary">Generate</button>
+                        </form>
+
+                        <form method="GET" action="{{ route('export_logistic_request_pdf') }}">
+                            <input type="hidden" name="year" value="{{ $tahun }}">
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-file-pdf"></i> Export PDF
+                            </button>
+                        </form>
+                    </div>
                     @if(Session::has('success'))
                         <script>
                             const Toast = Swal.mixin({
@@ -234,7 +310,7 @@
                         <div class="col-12">
                             <div class="card">
                                 <div class="card-header">
-                                    <h4>Daftar Permintaan Logistik </h4>
+                                    <h4>Daftar Rekomendasi Stok </h4>
                                 </div>
                                 <div class="table-responsive">
                                     <table class="table table-striped">
@@ -242,96 +318,43 @@
                                             <tr>
                                                 <th style="text-align: center;">No</th>
                                                 <th style="text-align: center;">Nama Logistik</th>
-                                                <th style="text-align: center;">Jumlah</th>
-                                                <th style="text-align: center;">Satuan</th>
-                                                <th style="text-align: center;">Tanggal</th>
-                                                <th style="text-align: center;">Nama Penerima</th>
-                                                <th style="text-align: center;">NIK/KK</th>
-                                                <th style="text-align: center;">Alamat Penerima</th>
-                                                <th style="text-align: center;">Keterangan</th>
+                                                <th style="text-align: center;">Stok Saat Ini</th>
+                                                <th style="text-align: center;">Rata-rata Penggunaan per Bulan</th>
+                                                <th style="text-align: center;">Rekomendasi Kebutuhan Tahunan</th>
                                                 <th style="text-align: center;">Status</th>
-                                                <th style="text-align: center;">Aksi</th>
                                             </tr>
                                         </thead>
                                         @php
                                             use Carbon\Carbon;
                                         @endphp
                                         <tbody>
-                                            @if($logisticrequests->count() > 0)
-                                                @foreach($logisticrequests as $logisticrequest)
-                                                    <tr>
-                                                        <td class="text-center">
-                                                            {{ ($logisticrequests->currentPage() - 1) * $logisticrequests->perPage() + $loop->iteration }}
-                                                        </td>
-                                                        <td class="text-center">
-                                                            {{ optional($logisticrequest->logistic)->nama_logistik }}
-                                                        </td>
-                                                        <td class="text-center">{{ $logisticrequest->jumlah_logistik_request }}
-                                                        </td>
-                                                        <td class="text-center">
-                                                            {{ optional($logisticrequest->logistic)->satuan_logistik }}
-                                                        </td>
-                                                        <td class="text-center">{{ \Carbon\Carbon::parse($logisticrequest->tanggal_kejadian_request)->translatedFormat('l, d F Y') }}</td>
-                                                        <td class="text-center">{{ $logisticrequest->nama_penerima_request }}
-                                                        </td>
-                                                        <td class="text-center">{{ $logisticrequest->nik_kk_request }}</td>
-                                                        <td class="text-center">{{ $logisticrequest->alamat_penerima_request }}
-                                                        </td>
-                                                        <td class="text-center">{{ $logisticrequest->keterangan_request }}</td>
-                                                        <td class="text-center">
-                                                            @if ($logisticrequest->status == 'Dikonfirmasi')
-                                                                <span
-                                                                    style="background-color: #32CD32; color: white; padding: 5px 10px; border-radius: 5px;">Dikonfirmasi</span>
-                                                            @else
-                                                                <span style="color: #FF0000; font-weight: bold;">Belum
-                                                                    Dikonfirmasi</span>
-                                                            @endif
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <div class="d-flex justify-content-center" role="group"
-                                                                aria-label="Basic example">
-                                                                <form
-                                                                    action="{{ route('logisticrequests.destroy', $logisticrequest->id) }}"
-                                                                    method="POST" class="p-0 mr-2"
-                                                                    onsubmit="return confirm('Tolak dan hapus permintaan ini?')">
-                                                                    @csrf
-                                                                    @method('DELETE')
-                                                                    <button type="submit" class="btn btn-danger" title="Delete">
-                                                                        <i class="fas fa-times"></i>
-                                                                    </button>
-                                                                </form>
-                                                                <form
-                                                                    action="{{ route('logisticrequests.confirm', $logisticrequest->id) }}"
-                                                                    method="POST" class="p-0 mr-2"
-                                                                    onsubmit="return confirm('Konfirmasi permintaan ini?')">
-                                                                    @csrf
-                                                                    @method('POST')
-                                                                    <button type="submit" class="btn btn-success"
-                                                                        title="Konfirmasi">
-                                                                        <i class="fas fa-check"></i>
-                                                                    </button>
-                                                                </form>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                @endforeach
+                                    @forelse($logisticrequests as $i => $item)
+                                    <tr class="{{ $item['status'] == 'Aman' ? 'row-aman' : 'row-warning' }}">
+                                        <td class="text-center">{{ $i + 1 }}</td>
+                                        <td class="text-center">{{ $item['nama_logistik'] }}</td>
+                                        <td class="text-center">{{ $item['stok_saat_ini'] }}</td>
+                                        <td class="text-center">{{ $item['rata_bulanan'] }}</td>
+                                        <td class="text-center">{{ $item['rekomendasi_tahunan'] }}</td>
+                                        <td class="text-center">
+                                            @if($item['status'] == 'Aman')
+                                                <span class="badge badge-success">Aman</span>
                                             @else
-                                                <tr>
+                                                <span class="badge badge-danger">Perlu Pengadaan</span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                    @empty
+                                    <tr>
                                                     <td colspan="9" class="text-center">Tidak ada data!</td>
                                                 </tr>
                                             @endif
                                         </tbody>
                                     </table>
                                     <div class="container">
-                                        <div class="row justify-content-end">
-                                            <div class="col-auto">
-                                                {{ $logisticrequests->links() }}
-                                            </div>
-                                        </div>
                                         <div class="row justify-content-end mt-2">
                                             <div class="col-auto">
-                                                <span> Halaman {{ $logisticrequests->currentPage() }} dari
-                                                    {{ $logisticrequests->lastPage() }} halaman </span>
+                                                <span>Menampilkan total {{ count($logisticrequests) }} data hasil rekomendasi stok</span>
+
                                             </div>
                                         </div>
                                     </div>
@@ -382,6 +405,10 @@
         document.getElementById('search-input').addEventListener('input', performSearch);
     </script>
 
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ asset('assets/js/statistics.js') }}"></script>
+
+   
 </body>
 
 </html>

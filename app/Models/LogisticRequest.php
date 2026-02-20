@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Logistic;
@@ -13,16 +11,20 @@ class LogisticRequest extends Model
     use HasFactory;
 
     protected $fillable = [
+        'id_user',
         'id_logistik',
         'id_inlogistik',
-        'id_user',
-        'jumlah_logistik_request', 
-        'tanggal_kejadian_request', 
-        'nama_penerima_request',
-        'nik_kk_request',
-        'alamat_penerima_request',
-        'keterangan_request',
+        'id_outlogistik', 
+        'stok_saat_ini', 
+        'rata_bulanan',
+        'rekomendasi_tahunan',
+        'status',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'id_user');
+    }
 
     public function logistic()
     {
@@ -33,8 +35,10 @@ class LogisticRequest extends Model
     {
         return $this->belongsTo(Inlogistic::class, 'id_inlogistik');
     }
-    public function user()
+    
+    public function outlogistic()
     {
-        return $this->belongsTo(User::class, 'id_user');
+        return $this->belongsTo(Outlogistic::class, 'id_outlogistik');
     }
+
 }

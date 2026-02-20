@@ -158,8 +158,8 @@
                   Keluar</span></a>
             </li>
             <li>
-              <a href="{{ route('logisticrequests')}}" class="nav-link"><i class="fas fa-truck"></i>
-                <span>Permintaan Logistik</span></a>
+              <a href="{{ route('logisticrequests')}}" class="nav-link"><i class="fas fa-chart-line"></i>
+                <span>Rekomendasi Stok</span></a>
             </li>
             <li class="menu-header">Pengaturan</li>
             <li class=active>

@@ -6,40 +6,96 @@ use Illuminate\Http\Request;
 use App\Models\LogisticRequest;
 use App\Models\Logistic;
 use App\Models\Inlogistic;
+use App\Models\Outlogistic;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\File;
 
 class LogisticRequestController extends Controller
 {
-
     public function index(Request $request)
     {
-        $query = LogisticRequest::with('logistic');
+        // Tahun default: tahun depan
+        $tahun = $request->input('year', date('Y') + 1);
 
-        $month = $request->input('month');
-        $year = $request->input('year');
+        // Ambil semua logistik
+        $logistics = Logistic::with(['inlogistics', 'outlogistics'])->get();
 
-        if ($month && $year) {
-            $query->whereYear('tanggal_kejadian_request', $year)
-                ->whereMonth('tanggal_kejadian_request', $month);
-        } elseif ($year) {
-            $query->whereYear('tanggal_kejadian_request', $year);
+        $logisticrequests = [];
+
+        foreach ($logistics as $logistic) {
+            // Total stok masuk dan keluar
+            $stokMasuk = $logistic->inlogistics->sum('jumlah_logistik_masuk');
+            $stokKeluar = $logistic->outlogistics->sum('jumlah_logistik_keluar');
+            $stokSaatIni = $stokMasuk - $stokKeluar;
+
+            // Rata-rata penggunaan per bulan tahun berjalan
+            $rataBulanan = Outlogistic::where('id_logistik', $logistic->id)
+                ->whereYear('tanggal_keluar', date('Y'))
+                ->avg('jumlah_logistik_keluar') ?? 0;
+
+            $rekomendasiTahunan = round($rataBulanan * 12, 2);
+            $status = $stokSaatIni >= $rekomendasiTahunan ? 'Aman' : 'Perlu Pengadaan';
+
+            $logisticrequests[] = [
+                'nama_logistik' => $logistic->nama_logistik,
+                'stok_saat_ini' => $stokSaatIni,
+                'rata_bulanan' => round($rataBulanan, 2),
+                'rekomendasi_tahunan' => $rekomendasiTahunan,
+                'status' => $status,
+            ];
         }
 
-        $logisticrequests = $query->latest()->paginate(15);
-
-        $logistics = Logistic::with('logisticrequests')->get();
-
-        $firstYearDate = LogisticRequest::min('tanggal_kejadian_request');
+        // Tahun pertama data
+        $firstYearDate = Inlogistic::min('tanggal_masuk');
         $firstYear = $firstYearDate ? date('Y', strtotime($firstYearDate)) : date('Y');
         $currentYear = date('Y');
 
         return view('logisticrequests.index', [
             'logisticrequests' => $logisticrequests,
-            'logistics' => $logistics,
             'firstYear' => $firstYear,
             'currentYear' => $currentYear,
+            'tahun' => $tahun,
         ]);
+    }
+
+    /**
+     * Export hasil rekomendasi stok ke PDF
+     */
+    public function export_logistic_request_pdf(Request $request)
+    {
+        $tahun = $request->input('year', date('Y') + 1);
+
+        $logistics = Logistic::with(['inlogistics', 'outlogistics'])->get();
+
+        $data = [];
+        foreach ($logistics as $logistic) {
+            $stokMasuk = $logistic->inlogistics->sum('jumlah_logistik_masuk');
+            $stokKeluar = $logistic->outlogistics->sum('jumlah_logistik_keluar');
+            $stokSaatIni = $stokMasuk - $stokKeluar;
+
+            $rataBulanan = Outlogistic::where('id_logistik', $logistic->id)
+                ->whereYear('tanggal_keluar', date('Y'))
+                ->avg('jumlah_logistik_keluar') ?? 0;
+
+            $rekomendasiTahunan = round($rataBulanan * 12, 2);
+            $status = $stokSaatIni >= $rekomendasiTahunan ? 'Aman' : 'Perlu Pengadaan';
+
+            $data[] = [
+                'nama_logistik' => $logistic->nama_logistik,
+                'stok_saat_ini' => $stokSaatIni,
+                'rata_bulanan' => round($rataBulanan, 2),
+                'rekomendasi_tahunan' => $rekomendasiTahunan,
+                'status' => $status,
+            ];
+        }
+
+        $pdf = PDF::loadView('pdf.export_logistic_request', [
+            'logisticrequests' => $data,
+            'tahun' => $tahun
+        ]);
+
+        return $pdf->download('Rekomendasi_Stok_' . $tahun . '.pdf');
     }
 
     public function create()
@@ -66,24 +122,6 @@ class LogisticRequestController extends Controller
     public function update(Request $request, string $id)
     {
         //
-    }
-
-    public function confirm($id)
-    {
-        $logisticRequest = LogisticRequest::findOrFail($id);
-
-        $logisticRequest->status = 'Dikonfirmasi';
-        $logisticRequest->save();
-
-        return redirect()->route('logisticrequests.index')->with('success', 'Permintaan logistik berhasil dikonfirmasi !');
-    }
-
-    public function destroy($id)
-    {
-        $logisticrequests = LogisticRequest::findOrFail($id);
-        $logisticrequests->delete();
-
-        return redirect()->route('logisticrequests.index')->with('success', 'Permintaan berhasil ditolak dan dihapus !');
     }
 
 }

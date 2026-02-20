@@ -30,4 +30,9 @@ class Outlogistic extends Model
     {
         return $this->belongsTo(Inlogistic::class, 'id_inlogistik');
     }
+
+     public function logisticrequests()
+    {
+        return $this->hasMany(LogisticRequest::class, 'id_outlogistik', 'id');
+    }
 }

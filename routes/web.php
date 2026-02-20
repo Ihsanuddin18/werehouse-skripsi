@@ -11,16 +11,14 @@ use App\Http\Controllers\InlogisticController;
 use App\Http\Controllers\OutlogisticController;
 use App\Http\Controllers\LogisticRequestController;
 
-
-
-Route::get('/', function () {return view('welcome'); });
-    Route::get('/about', [AboutController::class, 'showAbout'])->name('about');
-    Route::get('/contact', [ContactController::class, 'showContact'])->name('contact');
-    Route::post('/submit-form', [ContactController::class, 'submitForm'])->name('submit.form');
+Route::get('/', function () {return redirect()->route('login');});
+Route::get('/about', [AboutController::class, 'showAbout'])->name('about');
+Route::get('/contact', [ContactController::class, 'showContact'])->name('contact');
+Route::post('/submit-form', [ContactController::class, 'submitForm'])->name('submit.form');
 
 
 Route::get('/home', [HomeController::class, 'index'])->middleware('auth')->name('home');
-    Route::get('post', [HomeController::class, 'post'])->middleware(['auth', 'anggota']);
+Route::get('post', [HomeController::class, 'post'])->middleware(['auth', 'anggota']);
 
 
 Route::middleware('auth')->group(function () {
@@ -93,8 +91,7 @@ Route::controller(LogisticRequestController::class)->prefix('logisticrequests')-
     Route::resource('logisticrequests', LogisticRequestController::class);
     Route::get('', 'index')->name('logisticrequests');
     Route::post('store', 'store')->name('logisticrequests.store');
-    Route::delete('destroy/{id}', 'destroy')->name('logisticrequests.destroy');
-    Route::post('confirm/{id}', 'confirm')->name('logisticrequests.confirm');
+    Route::get('/export_logistic_request_pdf', [LogisticRequestController::class, 'export_logistic_request_pdf'])->name('export_logistic_request_pdf');
 });
 
 
