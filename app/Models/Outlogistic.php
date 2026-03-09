@@ -16,6 +16,7 @@ class Outlogistic extends Model
         'tanggal_keluar',
         'nama_penerima',
         'nik_kk_penerima',
+        'nomor_telepon',
         'alamat_penerima',
         'keterangan_keluar',
         'dokumentasi_keluar',

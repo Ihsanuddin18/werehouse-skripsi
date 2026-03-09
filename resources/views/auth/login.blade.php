@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Login &rsaquo; Werehouse BPBD | Kabupaten Jember</title>
+    <title>Login &rsaquo; Warehouse BPBD | Kabupaten Jember</title>
 
     <link rel="shortcut icon" href="{{ asset('landingpages') }}/assets/images/logo/logobpbd1.png" type="image/png" />
 
@@ -92,7 +92,7 @@
                                             style="background-color: rgb(110, 110, 255); border-color: rgb(110, 110, 252);">Login</button>
                                     </div>
                                     <div class="row">
-                                        <p class="forget-p">Werehouse | BPBD</span></p>
+                                        <p class="forget-p">Warehouse | BPBD</span></p>
                                     </div>
                                     <div class="row">
                                         <p class="small-info"></p>

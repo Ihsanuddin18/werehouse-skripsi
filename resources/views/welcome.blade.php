@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Selamat Datang Di Werehouse BPBD | Kabupaten Jember</title>
+  <title>Selamat Datang Di Warehouse BPBD | Kabupaten Jember</title>
 
   <link rel="shortcut icon" href="{{ asset('landingpages') }}/assets/images/logo/logobpbd1.png" type="image/png" />
 
@@ -104,7 +104,7 @@
         <div class="col-lg-12">
           <div class="ud-hero-content wow fadeInUp" data-wow-delay=".2s">
             <h1 class="ud-hero-title">
-              Selamat Datang Di Website Werehouse <br> Badan Penanggulangan Bencana Daerah <br> Kabupaten Jember <br>
+              Selamat Datang Di Website Warehouse <br> Badan Penanggulangan Bencana Daerah <br> Kabupaten Jember <br>
               Sistem Manajemen Inventory Logistik
             </h1>
           </div>
@@ -130,7 +130,7 @@
         <div class="col-lg-12">
           <div class="ud-section-title">
             <span>Fitur Utama</span>
-            <h2>Werehouse BPBD</h2>
+            <h2>Warehouse BPBD</h2>
             <p>
               Fitur-fitur ini dirancang untuk membantu BPBD Kabupaten Jember dalam mengelola
               persediaan mereka dengan efisien.
@@ -179,10 +179,10 @@
       <div class="ud-about-wrapper wow fadeInUp" data-wow-delay=".2s">
         <div class="ud-about-content-wrapper">
           <div class="ud-about-content">
-            <h2>Werehouse BPBD <br> Kabupaten Jember
+            <h2>Warehouse BPBD <br> Kabupaten Jember
             </h2>
             <p>
-              Website Manajemen Stok Logistik "Werehouse BPBD Kabupaten Jember"
+              Website Manajemen Stok Logistik "Warehouse BPBD Kabupaten Jember"
             </p>
             <a href="{{ route('about') }}" class="ud-main-btn">
               Selengkapnya
@@ -601,8 +601,8 @@
           </div>
           <div class="col-md-4">
             <p class="ud-footer-bottom-right">
-              Selamat Datang Di Website Resmi Werehouse BPBD
-              <a href="/" rel="nofollow">Werehouse BPBD Kabupaten Jember </a>
+              Selamat Datang Di Website Resmi Warehouse BPBD
+              <a href="/" rel="nofollow">Warehouse BPBD Kabupaten Jember </a>
             </p>
           </div>
         </div>

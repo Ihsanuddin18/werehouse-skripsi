@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>Reset Password &rsaquo; Werehouse BPBD | Kabupaten Jember</title>
+    <title>Reset Password &rsaquo; Warehouse BPBD | Kabupaten Jember</title>
 
     <!--====== Favicon Icon ======-->
     <link
@@ -103,7 +103,7 @@
                             </div>
                         </form>
                         <div class="row">
-                            <p class="forget-p">Werehouse | BPBD</p>
+                            <p class="forget-p">Warehouse | BPBD</p>
                         </div>
                         <div class="row">
                             <p class="small-info"></p>

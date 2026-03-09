@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-    <title>Dashboard &rsaquo; Data Logistik Keluar &mdash; Werehouse BPBD | Kabupaten Jember</title>
+    <title>Dashboard &rsaquo; Data Logistik Keluar &mdash; Warehouse BPBD | Kabupaten Jember</title>
 
     <link rel="shortcut icon" href="{{ asset('landingpages') }}/assets/images/logo/logobpbd1.png" type="image/png" />
 
@@ -126,7 +126,7 @@
                     <div class="sidebar-brand">
                         <img alt="image" src="{{ asset('tdashboard') }}/assets/img/avatar/logobpbd1.png"
                             style="width: 143px; height: auto; margin-top: 20px;">
-                        <a href="{{ route('home') }}"> Werehouse BPBD </a>
+                        <a href="{{ route('home') }}"> Warehouse BPBD </a>
                         <hr
                             style="margin-top: 3px; margin-bottom: 3px; border: none; border-bottom: 0.1px solid #C1C1C1; width: 80%;">
                         <p><br></p>
@@ -261,7 +261,7 @@
                                                 <th style="text-align: center;">Satuan</th>
                                                 <th style="text-align: center;">Nama Penerima</th>
                                                 <th style="text-align: center;">Alamat Penerima</th>
-                                                <th style="text-align: center;">Keterangan</th>
+                                                <th style="text-align: center;">Jenis Bencana</th>
                                                 <th style="text-align: center;">Dokumentasi</th>
                                                 <th style="text-align: center;">Aksi</th>
                                             </tr>
@@ -340,7 +340,7 @@
     </div>
     <footer class="main-footer">
         <div class="footer-left">
-            Werehouse BPBD<div class="bullet"></div> Kabupaten Jember
+            Warehouse BPBD<div class="bullet"></div> Kabupaten Jember
         </div>
         <div class="footer-right">
         </div>

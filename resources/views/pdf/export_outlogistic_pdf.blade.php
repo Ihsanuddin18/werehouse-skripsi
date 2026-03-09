@@ -43,7 +43,7 @@
             <th>Satuan</th>
             <th>Penerima</th>
             <th>Alamat</th>
-            <th>Keterangan</th>
+            <th>Jenis Bencana</th>
             <th>Dokumentasi</th>
         </tr>
         @if($outlogistics->count() > 0)

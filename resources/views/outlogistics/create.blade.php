@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-    <title>Logistik Keluar &rsaquo; Tambah logistik keluar &mdash; Werehouse BPBD | Kabupaten Jember</title>
+    <title>Logistik Keluar &rsaquo; Tambah logistik keluar &mdash; Warehouse BPBD | Kabupaten Jember</title>
 
     <link rel="shortcut icon" href="{{ asset('landingpages') }}/assets/images/logo/logobpbd1.png" type="image/png" />
 
@@ -128,7 +128,7 @@
                     <div class="sidebar-brand">
                         <img alt="image" src="{{ asset('tdashboard') }}/assets/img/avatar/logobpbd1.png"
                             style="width: 143px; height: auto; margin-top: 20px;">
-                        <a href="{{ route('home') }}"> Werehouse BPBD </a>
+                        <a href="{{ route('home') }}"> Warehouse BPBD </a>
                         <hr
                             style="margin-top: 3px; margin-bottom: 3px; border: none; border-bottom: 0.1px solid #C1C1C1; width: 80%;">
                         <p><br></p>
@@ -195,7 +195,7 @@
                                 @csrf
                                 <div class="form-row">
                                     <div class="form-group col-md-3">
-                                        <label for="tanggal_keluar">Tanggal Logistik Keluar</label>
+                                        <label for="tanggal_keluar">Tanggal Kejadian</label>
                                         <input type="date" class="form-control" name="tanggal_keluar"
                                             id="tanggal_keluar" placeholder="*Tanggal Keluar" required>
                                     </div>
@@ -217,6 +217,11 @@
                                         <label for="nik_kk_penerima">NIK / KK</label>
                                         <input type="text" class="form-control" name="nik_kk_penerima"
                                             id="nik_kk_penerima" placeholder="*Nik/Kk" required>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="nomor_telepon">Nomor Telepon</label>
+                                        <input type="text" class="form-control" name="nomor_telepon"
+                                            id="nomor_telepon" placeholder="*Nomor telepon" required>
                                     </div>
                                     <div class="form-group col-md-3">
                                         <label for="alamat_penerima">Alamat Penerima</label>
@@ -259,10 +264,25 @@
                                         <input type="text" class="form-control" name="satuan_logistik"
                                             id="satuan_logistik" disabled readonly>
                                     </div>
-                                    <div class="form-group col-md-6">
-                                        <label for="keterangan_keluar">Keterangan</label>
-                                        <input type="text" class="form-control" name="keterangan_keluar"
-                                            id="keterangan_keluar" placeholder="*Masukkan Keterangan" required>
+                                  <div class="form-group col-md-6">
+                                        <label for="keterangan_keluar">Jenis Bencana</label>
+                                        <select class="form-control" name="keterangan_keluar" id="keterangan_keluar" required>
+                                            <option value="" selected disabled>*Pilih Jenis Bencana</option>
+                                            <option value="Banjir">Banjir</option>
+                                            <option value="Banjir Bandang">Banjir Bandang</option>
+                                            <option value="Tanah Longsor">Tanah Longsor</option>
+                                            <option value="Gempa Bumi">Gempa Bumi</option>
+                                            <option value="Tsunami">Tsunami</option>
+                                            <option value="Letusan Gunung Api">Letusan Gunung Api</option>
+                                            <option value="Angin Puting Beliung">Angin Puting Beliung</option>
+                                            <option value="Kekeringan">Kekeringan</option>
+                                            <option value="Gelombang Pasang / Abrasi">Gelombang Pasang / Abrasi</option>
+                                            <option value="Kebakaran Hutan dan Lahan">Kebakaran Hutan dan Lahan</option>
+                                            <option value="Kebakaran Permukiman">Kebakaran Permukiman</option>
+                                            <option value="Cuaca Ekstrem">Cuaca Ekstrem</option>
+                                            <option value="Tanah Bergerak">Tanah Bergerak</option>
+                                            <option value="Lainnya">Lainnya</option>
+                                        </select>
                                     </div>
                                     <div class="form-group col-md-6">
                                         <label for="dokumentasi_keluar">Dokumentasi Keluar</label>
@@ -287,6 +307,7 @@
                                             <th>Satuan</th>
                                             <th>Nama Penerima</th>
                                             <th>NIK / KK</th>
+                                            <th>Nomor Telepon</th>
                                             <th>Alamat Penerima</th>
                                             <th>Tanggal Keluar</th>
                                             <th>Dokumentasi</th>
@@ -345,6 +366,7 @@
                             document.getElementById('tanggal_keluar'),
                             document.getElementById('nama_penerima'),
                             document.getElementById('nik_kk_penerima'),
+                            document.getElementById('nomor_telepon'),
                             document.getElementById('alamat_penerima'),
                             logisticSelect,
                             jumlahLogistikKeluarInput,
@@ -387,6 +409,7 @@
                         const tanggalKeluar = document.getElementById('tanggal_keluar').value;
                         const namaPenerima = document.getElementById('nama_penerima').value;
                         const nikKkPenerima = document.getElementById('nik_kk_penerima').value;
+                        const nomorTelepon = document.getElementById('nomor_telepon').value;
                         const alamatPenerima = document.getElementById('alamat_penerima').value;
                         const logisticText = logisticSelect.options[logisticSelect.selectedIndex].text;
                         const jumlah = jumlahLogistikKeluarInput.value;
@@ -405,6 +428,7 @@
                         const cell8 = newRow.insertCell(7);
                         const cell9 = newRow.insertCell(8);
                         const cell10 = newRow.insertCell(9);
+                        const cell11 = newRow.insertCell(10);
 
                         cell1.innerHTML = table.rows.length;
                         cell2.innerHTML = logisticText + `<input type="hidden" name="id_logistik[]" value="${logisticSelect.value}">`;
@@ -412,10 +436,11 @@
                         cell4.innerHTML = satuan + `<input type="hidden" name="satuan_logistik[]" value="${satuan}">`;
                         cell5.innerHTML = namaPenerima + `<input type="hidden" name="nama_penerima[]" value="${namaPenerima}">`;
                         cell6.innerHTML = nikKkPenerima + `<input type="hidden" name="nik_kk_penerima[]" value="${nikKkPenerima}">`;
-                        cell7.innerHTML = alamatPenerima + `<input type="hidden" name="alamat_penerima[]" value="${alamatPenerima}">`;
-                        cell8.innerHTML = tanggalKeluar + `<input type="hidden" name="tanggal_keluar[]" value="${tanggalKeluar}">`;
-                        cell9.innerHTML = dokumentasi + `<input type="hidden" name="dokumentasi_keluar[]" value="${dokumentasi}">`;
-                        cell10.innerHTML = '<button type="button" class="btn btn-danger remove-logistic">Hapus</button>';
+                        cell7.innerHTML = nomorTelepon + `<input type="hidden" name="nomor_telepon[]" value="${nomorTelepon}">`;
+                        cell8.innerHTML = alamatPenerima + `<input type="hidden" name="alamat_penerima[]" value="${alamatPenerima}">`;
+                        cell9.innerHTML = tanggalKeluar + `<input type="hidden" name="tanggal_keluar[]" value="${tanggalKeluar}">`;
+                        cell10.innerHTML = dokumentasi + `<input type="hidden" name="dokumentasi_keluar[]" value="${dokumentasi}">`;
+                        cell11.innerHTML = '<button type="button" class="btn btn-danger remove-logistic">Hapus</button>';
 
                         document.querySelectorAll('.remove-logistic').forEach(button => {
                             addRemoveButtonHandler(button);
@@ -448,7 +473,7 @@
 
             <footer class="main-footer">
                 <div class="footer-left">
-                    Werehouse BPBD<div class="bullet"></div> Kabupaten Jember
+                    Warehouse BPBD<div class="bullet"></div> Kabupaten Jember
                 </div>
                 <div class="footer-right">
                 </div>

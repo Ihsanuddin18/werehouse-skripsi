@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-    <title>Logistik Keluar &rsaquo; Detail logistik keluar &mdash; Werehouse BPBD | Kabupaten Jember</title>
+    <title>Logistik Keluar &rsaquo; Detail logistik keluar &mdash; Warehouse BPBD | Kabupaten Jember</title>
 
     <link rel="shortcut icon" href="{{ asset('landingpages') }}/assets/images/logo/logobpbd1.png" type="image/png" />
 
@@ -128,7 +128,7 @@
                     <div class="sidebar-brand">
                         <img alt="image" src="{{ asset('tdashboard') }}/assets/img/avatar/logobpbd1.png"
                             style="width: 143px; height: auto; margin-top: 20px;">
-                        <a href="{{ route('home') }}"> Werehouse BPBD </a>
+                        <a href="{{ route('home') }}"> Warehouse BPBD </a>
                         <hr
                             style="margin-top: 3px; margin-bottom: 3px; border: none; border-bottom: 0.1px solid #C1C1C1; width: 80%;">
                         <p><br></p>
@@ -221,11 +221,15 @@
                                                 <p>{{ $outlogistic->nik_kk_penerima }}</p>
                                             </div>
                                             <div class="form-group">
+                                                <label for="nomor_telepon">Nomor Telepon:</label>
+                                                <p>{{ $outlogistic->nomor_telepon }}</p>
+                                            </div>
+                                            <div class="form-group">
                                                 <label for="alamat_penerima">Alamat Penerima:</label>
                                                 <p>{{ $outlogistic->alamat_penerima }}</p>
                                             </div>
                                             <div class="form-group">
-                                                <label for="tanggal_keluar">Tanggal Keluar:</label>
+                                                <label for="tanggal_keluar">Tanggal kejadian:</label>
                                                 <p>{{ \Carbon\Carbon::parse($outlogistic->tanggal_keluar)->translatedFormat('l, d F Y') }}
                                                 </p>
                                             </div>
@@ -251,7 +255,7 @@
                                                 <p>{{ $outlogistic->jumlah_logistik_keluar }}</p>
                                             </div>
                                             <div class="form-group">
-                                                <label for="keterangan_keluar">Keterangan:</label>
+                                                <label for="keterangan_keluar">Jenis Bencana:</label>
                                                 <p>{{ $outlogistic->keterangan_keluar }}</p>
                                             </div>
                                             <div class="form-group">
@@ -283,8 +287,8 @@
                                                             <th class="text-center">Nama Logistik</th>
                                                             <th class="text-center">Satuan</th>
                                                             <th class="text-center">Jumlah</th>
-                                                            <th class="text-center">Tanggal Keluar</th>
-                                                            <th class="text-center">Keterangan</th>
+                                                            <th class="text-center">Tanggal Kejadian</th>
+                                                            <th class="text-center">Jenis Bencana</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
@@ -321,7 +325,7 @@
             </div>
             <footer class="main-footer">
                 <div class="footer-left">
-                    Werehouse BPBD<div class="bullet"></div> Kabupaten Jember
+                    Warehouse BPBD<div class="bullet"></div> Kabupaten Jember
                 </div>
                 <div class="footer-right">
                 </div>

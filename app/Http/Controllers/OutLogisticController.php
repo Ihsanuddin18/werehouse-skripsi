@@ -98,7 +98,8 @@ class OutLogisticController extends Controller
             'nama_penerima' => 'required|string',
             'alamat_penerima' => 'required|string',
             'keterangan_keluar' => 'required|string',
-            'nik_kk_penerima' => 'required|string',
+            'nik_kk_penerima' => 'required|string', 
+            'nomor_telepon' => 'required|string',
             'dokumentasi_keluar' => 'nullable|mimes:png,jpg,jpeg,webp',
         ]);
 
@@ -129,6 +130,7 @@ class OutLogisticController extends Controller
             'alamat_penerima' => $request->alamat_penerima,
             'keterangan_keluar' => $request->keterangan_keluar,
             'nik_kk_penerima' => $request->nik_kk_penerima,
+            'nomor_telepon' => $request->nomor_telepon,
             'dokumentasi_keluar' => $path . $filename,
         ]);
 
@@ -173,6 +175,7 @@ class OutLogisticController extends Controller
             'tanggal_keluar' => 'required|date',
             'nama_penerima' => 'required|string|max:255',
             'nik_kk_penerima' => 'required|string|max:255',
+            'nomor_telepon' => 'required|string|max:255',
             'alamat_penerima' => 'required|string|max:255',
             'jumlah_logistik_keluar' => 'required|integer',
             'keterangan_keluar' => 'nullable|string',
@@ -199,6 +202,7 @@ class OutLogisticController extends Controller
         $outlogistic->tanggal_keluar = $validatedData['tanggal_keluar'];
         $outlogistic->nama_penerima = $validatedData['nama_penerima'];
         $outlogistic->nik_kk_penerima = $validatedData['nik_kk_penerima'];
+        $outlogistic->nomor_telepon = $validatedData['nomor_telepon'];
         $outlogistic->alamat_penerima = $validatedData['alamat_penerima'];
         $outlogistic->jumlah_logistik_keluar = $validatedData['jumlah_logistik_keluar'];
         $outlogistic->keterangan_keluar = $validatedData['keterangan_keluar'];

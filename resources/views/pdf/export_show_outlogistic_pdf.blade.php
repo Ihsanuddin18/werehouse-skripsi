@@ -78,11 +78,15 @@
                             <p>{{ $outlogistic->nik_kk_penerima }}</p>
                         </div>
                         <div class="form-group">
+                            <label style="font-weight: bold" for="nomor_telepon">Nomor Telepon:</label>
+                            <p>{{ $outlogistic->nomor_telepon }}</p>
+                        </div>
+                        <div class="form-group">
                             <label style="font-weight: bold" for="alamat_penerima">Alamat Penerima:</label>
                             <p>{{ $outlogistic->alamat_penerima }}</p>
                         </div>
                         <div class="form-group">
-                            <label style="font-weight: bold" for="tanggal_keluar">Tanggal Keluar:</label>
+                            <label style="font-weight: bold" for="tanggal_keluar">Tanggal Kejadian:</label>
                             <p>{{ \Carbon\Carbon::parse($outlogistic->tanggal_keluar)->translatedFormat('l, d F Y') }}
                             </p>
                         </div>
@@ -108,7 +112,7 @@
                             <p>{{ $outlogistic->jumlah_logistik_keluar }}</p>
                         </div>
                         <div class="form-group">
-                            <label style="font-weight: bold" for="keterangan_keluar">Keterangan:</label>
+                            <label style="font-weight: bold" for="keterangan_keluar">Jenis Bencana:</label>
                             <p>{{$outlogistic->keterangan_keluar}}</p>
                         </div>
                         <div class="form-group">
@@ -145,8 +149,8 @@
                             <th class="text-center">Nama Logistik</th>
                             <th class="text-center">Satuan</th>
                             <th class="text-center">Jumlah</th>
-                            <th class="text-center">Tanggal Keluar</th>
-                            <th class="text-center">Keterangan</th>
+                            <th class="text-center">Tanggal Kejadian</th>
+                            <th class="text-center">Jenis Bencana</th>
                         </tr>
                     </thead>
                     <tbody>

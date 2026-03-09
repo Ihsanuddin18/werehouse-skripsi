@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title> Selamat Datang Di Werehouse BPBD | Kabupaten Jember </title>
+    <title> Selamat Datang Di Warehouse BPBD | Kabupaten Jember </title>
 
     <link
       rel="shortcut icon"
@@ -117,10 +117,10 @@
           <div class="ud-about-content-wrapper">
             <div class="ud-about-content">
               <span class="tag">Profil</span>
-              <h2>Werehouse BPBD <br> Kabupaten Jember
+              <h2>Warehouse BPBD <br> Kabupaten Jember
               </h2>
               <p>
-                Website Manajemen Stok Logistik "Werehouse BPBD Kabupaten Jember" adalah sebuah
+                Website Manajemen Stok Logistik "Warehouse BPBD Kabupaten Jember" adalah sebuah
                 platform digital yang dirancang khusus untuk membantu Badan Penanggulangan Bencana
                 Daerah (BPBD) Kabupaten Jember dalam mengelola dan mengoptimalkan manajemen stok
                 logistik. Website ini memiliki berbagai fitur dan fungsionalitas yang
@@ -401,8 +401,8 @@
             </div>
             <div class="col-md-4">
               <p class="ud-footer-bottom-right">
-                Selamat Datang Di Website Resmi Werehouse BPBD
-                <a href="/" rel="nofollow">Werehouse BPBD Kabupaten Jember </a>
+                Selamat Datang Di Website Resmi Warehouse BPBD
+                <a href="/" rel="nofollow">Warehouse BPBD Kabupaten Jember </a>
               </p>
             </div>
           </div>

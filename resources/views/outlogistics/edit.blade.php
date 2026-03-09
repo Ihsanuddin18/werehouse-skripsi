@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no" name="viewport">
-    <title>Logistik Keluar &rsaquo; Edit logistik keluar &mdash; Werehouse BPBD | Kabupaten Jember</title>
+    <title>Logistik Keluar &rsaquo; Edit logistik keluar &mdash; Warehouse BPBD | Kabupaten Jember</title>
 
     <link rel="shortcut icon" href="{{ asset('landingpages') }}/assets/images/logo/logobpbd1.png" type="image/png" />
 
@@ -121,7 +121,7 @@
                     <div class="sidebar-brand">
                         <img alt="image" src="{{ asset('tdashboard') }}/assets/img/avatar/logobpbd1.png"
                             style="width: 143px; height: auto; margin-top: 20px;">
-                        <a href="{{ route('home') }}"> Werehouse BPBD </a>
+                        <a href="{{ route('home') }}"> Warehouse BPBD </a>
                         <hr
                             style="margin-top: 3px; margin-bottom: 3px; border: none; border-bottom: 0.1px solid #C1C1C1; width: 80%;">
                         <p><br></p>
@@ -192,8 +192,7 @@
                                 <input type="hidden" name="id_logistik" value="{{ $outlogistic->id_logistik }}">
                                 <div class="form-row">
                                     <div class="form-group col-md-3">
-                                        <label for="tanggal_keluar" style="font-size: larger;">Tanggal Keluar
-                                            Logistik</label>
+                                        <label for="tanggal_keluar" style="font-size: larger;">Tanggal Kejadian</label>
                                         <input type="date" class="form-control" name="tanggal_keluar"
                                             id="tanggal_keluar" placeholder="*Tanggal Keluar"
                                             value="{{ old('tanggal_keluar', $outlogistic->tanggal_keluar) }}" required>
@@ -218,6 +217,13 @@
                                         <input type="text" class="form-control" name="nik_kk_penerima"
                                             id="nik_kk_penerima" placeholder="*NIK/KK"
                                             value="{{ old('nik_kk_penerima', $outlogistic->nik_kk_penerima) }}"
+                                            required>
+                                    </div>
+                                    <div class="form-group col-md-3">
+                                        <label for="nomor_telepon">Nomor Telepon</label>
+                                        <input type="text" class="form-control" name="nomor_telepon"
+                                            id="nomor_telepon" placeholder="*Nomor telepon"
+                                            value="{{ old('nomor_telepon', $outlogistic->nomor_telepon) }}"
                                             required>
                                     </div>
                                     <div class="form-group col-md-3">
@@ -272,7 +278,7 @@
                                             readonly>
                                     </div>
                                     <div class="form-group col-md-6">
-                                        <label for="keterangan_keluar">Keterangan</label>
+                                        <label for="keterangan_keluar">Jenis Bencana</label>
                                         <input type="text" class="form-control" name="keterangan_keluar"
                                             id="keterangan_keluar" placeholder="*Masukkan Keterangan"
                                             value="{{ old('keterangan_keluar', $outlogistic->keterangan_keluar) }}"
@@ -311,6 +317,7 @@
                         document.getElementById('tanggal_keluar'),
                         document.getElementById('nama_penerima'),
                         document.getElementById('nik_kk_penerima'),
+                        document.getElementById('nomor_telepon'),
                         document.getElementById('alamat_penerima'),
                         document.getElementById('jumlah_logistik_keluar'),
                         document.getElementById('keterangan_keluar')
@@ -328,7 +335,7 @@
 
             <footer class="main-footer">
                 <div class="footer-left">
-                    Werehouse BPBD<div class="bullet"></div> Kabupaten Jember
+                    Warehouse BPBD<div class="bullet"></div> Kabupaten Jember
                 </div>
                 <div class="footer-right">
                 </div>
