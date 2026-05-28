@@ -7,45 +7,72 @@ use App\Models\Logistic;
 use App\Models\Supplier;
 use App\Models\Inlogistic;
 use App\Models\Outlogistic;
-use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
     public function index()
     {
-        if(Auth::id())
-        {
+        if (Auth::id()) {
+
             $usertype = Auth::user()->usertype;
-            if($usertype=='user')
-            {
+
+            // ================= USER =================
+            if ($usertype == 'user') {
+
                 $inlogistics = Inlogistic::all();
+
                 $logisticsCount = Logistic::count();
                 $suppliersCount = Supplier::count();
                 $inlogisticsCount = Inlogistic::count();
                 $outlogisticsCount = Outlogistic::count();
 
-                \Log::info('Jumlah Logistik: ' . $logisticsCount);
-                \Log::info('Jumlah Supplier: ' . $suppliersCount);
-                \Log::info('Jumlah Penerimaan: ' . $inlogisticsCount);
-                \Log::info('Jumlah Penerimaan: ' . $outlogisticsCount);
-
-                return view('dashboard', compact('inlogistics','logisticsCount','suppliersCount','inlogisticsCount','outlogisticsCount'));
+                return view('dashboard', compact(
+                    'inlogistics',
+                    'logisticsCount',
+                    'suppliersCount',
+                    'inlogisticsCount',
+                    'outlogisticsCount'
+                ));
             }
-            else if($usertype=='anggota')
-            {
+
+            // ================= STAFF =================
+            elseif ($usertype == 'staff') {
+
+                $inlogistics = Inlogistic::all();
+
+                $logisticsCount = Logistic::count();
+                $suppliersCount = Supplier::count();
+                $inlogisticsCount = Inlogistic::count();
+                $outlogisticsCount = Outlogistic::count();
+
+                return view('staff.dashboard', compact(
+                    'inlogistics',
+                    'logisticsCount',
+                    'suppliersCount',
+                    'inlogisticsCount',
+                    'outlogisticsCount'
+                ));
+            }
+
+            // ================= ANGGOTA =================
+            elseif ($usertype == 'anggota') {
+
                 return view('anggota.anggotahome');
             }
-            else
-            {
+
+            // ================= DEFAULT =================
+            else {
+
                 return redirect()->back();
             }
         }
+
+        return redirect()->route('login');
     }
 
     public function post()
     {
-        return view("post");
+        return view('post');
     }
-
 }
