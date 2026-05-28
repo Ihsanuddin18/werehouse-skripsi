@@ -24,7 +24,34 @@
 
         gtag('config', 'UA-94034622-3');
     </script>
+    <style>
+        .status-proses {
+            background-color: #fff3cd;
+            color: #856404;
+        }
 
+        .status-dikirim {
+            background-color: #cce5ff;
+            color: #004085;
+        }
+
+        .status-selesai {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .status-btn:hover {
+            opacity: 0.85;
+        }
+
+        .status-btn:focus {
+            box-shadow: none;
+        }
+
+        .dropdown-item.status-option:hover {
+            background-color: #f8f9fa;
+        }
+    </style>
 </head>
 
 <body>
@@ -88,21 +115,21 @@
                         <div class="dropdown-menu dropdown-menu-right">
                             <div class="dropdown-title">
                                 @if(Auth::user()->last_login_at)
-                                                                @php
-                                                                    $diffInMinutes = Carbon\Carbon::now()->diffInMinutes(Auth::user()->last_login_at);
-                                                                    $diffInSeconds = Carbon\Carbon::now()->diffInSeconds(Auth::user()->last_login_at);
-                                                                    $hours = floor($diffInMinutes / 60);
-                                                                    $remainingMinutes = $diffInMinutes % 60;
-                                                                @endphp
-                                                                @if($diffInMinutes > 60)
-                                                                    Login {{ $hours }} jam {{ $remainingMinutes }} menit yang lalu
-                                                                @elseif($diffInMinutes > 1)
-                                                                    Login {{ $diffInMinutes }} menit yang lalu
-                                                                @elseif($diffInSeconds > 0)
-                                                                    Login {{ $diffInSeconds }} detik yang lalu
-                                                                @else
-                                                                    Baru Login
-                                                                @endif
+                                    @php
+                                        $diffInMinutes = Carbon\Carbon::now()->diffInMinutes(Auth::user()->last_login_at);
+                                        $diffInSeconds = Carbon\Carbon::now()->diffInSeconds(Auth::user()->last_login_at);
+                                        $hours = floor($diffInMinutes / 60);
+                                        $remainingMinutes = $diffInMinutes % 60;
+                                    @endphp
+                                    @if($diffInMinutes > 60)
+                                        Login {{ $hours }} jam {{ $remainingMinutes }} menit yang lalu
+                                    @elseif($diffInMinutes > 1)
+                                        Login {{ $diffInMinutes }} menit yang lalu
+                                    @elseif($diffInSeconds > 0)
+                                        Login {{ $diffInSeconds }} detik yang lalu
+                                    @else
+                                        Baru Login
+                                    @endif
                                 @else
                                     Baru Login
                                 @endif
@@ -263,52 +290,109 @@
                                                 <th style="text-align: center;">Alamat Penerima</th>
                                                 <th style="text-align: center;">Jenis Bencana</th>
                                                 <th style="text-align: center;">Dokumentasi</th>
+                                                <th style="text-align: center;">Status</th>
+                                                <th style="text-align: center;">Petugas</th>
                                                 <th style="text-align: center;">Aksi</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @if($outlogistics->count() > 0)
                                                 @foreach($outlogistics as $outlogistic)
-                                                    <tr>
-                                                        <td class="text-center">
-                                                            {{ ($outlogistics->currentPage() - 1) * $outlogistics->perPage() + $loop->iteration }}
-                                                        </td>
-                                                        <td class="text-center">
-                                                            {{ optional($outlogistic->logistic)->nama_logistik }}</td>
-                                                        <td class="text-center">{{ $outlogistic->jumlah_logistik_keluar }}</td>
-                                                        <td class="text-center">
-                                                            {{ optional($outlogistic->logistic)->satuan_logistik }}</td>
-                                                        <td class="text-center">{{ $outlogistic->nama_penerima }}</td>
-                                                        <td class="text-center">{{ $outlogistic->alamat_penerima }}</td>
-                                                        <td class="text-center">{{ $outlogistic->keterangan_keluar }}</td>
-                                                        <td class="text-center">
-                                                            <img src="{{ asset($outlogistic->dokumentasi_keluar) }}" width='50'
-                                                                height='50' class="img img-responsive" />
-                                                        </td>
-                                                        <td class="text-center">
-                                                            <div class="d-flex justify-content-center" role="group"
-                                                                aria-label="Basic example">
-                                                                <a href="{{ route('outlogistics.show', $outlogistic->id) }}"
-                                                                    class="btn btn-success mr-2" title="Detail">
-                                                                    <i class="fas fa-eye"></i>
-                                                                </a>
-                                                                <a href="{{ route('outlogistics.edit', $outlogistic->id)}}"
-                                                                    class="btn btn-warning mr-2" title="Edit">
-                                                                    <i class="fas fa-pencil-alt"></i>
-                                                                </a>
-                                                                <form
-                                                                    action="{{ route('outlogistics.destroy', $outlogistic->id) }}"
-                                                                    method="POST" class="p-0"
-                                                                    onsubmit="return confirm('Delete?')">
-                                                                    @csrf
-                                                                    @method('DELETE')
-                                                                    <button type="submit" class="btn btn-danger" title="Delete">
-                                                                        <i class="fas fa-trash-alt"></i>
-                                                                    </button>
-                                                                </form>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
+                                                                                        <tr>
+                                                                                            <td class="text-center">
+                                                                                                {{ ($outlogistics->currentPage() - 1) * $outlogistics->perPage() + $loop->iteration }}
+                                                                                            </td>
+                                                                                            <td class="text-center">
+                                                                                                {{ optional($outlogistic->logistic)->nama_logistik }}
+                                                                                            </td>
+                                                                                            <td class="text-center">{{ $outlogistic->jumlah_logistik_keluar }}</td>
+                                                                                            <td class="text-center">
+                                                                                                {{ optional($outlogistic->logistic)->satuan_logistik }}
+                                                                                            </td>
+                                                                                            <td class="text-center">{{ $outlogistic->nama_penerima }}</td>
+                                                                                            <td class="text-center">{{ $outlogistic->alamat_penerima }}</td>
+                                                                                            <td class="text-center">{{ $outlogistic->keterangan_keluar }}</td>
+                                                                                            <td class="text-center">
+                                                                                                <img src="{{ asset($outlogistic->dokumentasi_keluar) }}" width='50'
+                                                                                                    height='50' class="img img-responsive" />
+                                                                                            </td>
+                                                                                            <td class="text-center">
+                                                                                                <div class="dropdown status-dropdown"
+                                                                                                    data-id="{{ $outlogistic->id }}">
+                                                                                                    <button
+                                                                                                        class="btn btn-sm dropdown-toggle status-btn status-{{ $outlogistic->status ?? 'proses' }}"
+                                                                                                        type="button" data-toggle="dropdown" aria-haspopup="true"
+                                                                                                        aria-expanded="false"
+                                                                                                        style="min-width: 100px; border-radius: 20px; font-size: 12px; font-weight: 600; border: none;">
+                                                                                                        @php
+                                                                                                            $statusLabel = [
+                                                                                                                'proses' => '⏳ Proses',
+                                                                                                                'dikirim' => '🚚 Dikirim',
+                                                                                                                'selesai' => '✅ Selesai',
+                                                                                                            ];
+                                                                                                        @endphp
+                                                                                                        {{ $statusLabel[$outlogistic->status ?? 'proses'] }}
+                                                                                                    </button>
+                                                                                                    <div class="dropdown-menu dropdown-menu-right"
+                                                                                                        style="min-width: 130px; border-radius: 10px; overflow: hidden;">
+                                                                                                        <a class="dropdown-item status-option" href="#"
+                                                                                                            data-status="proses"
+                                                                                                            style="font-size: 13px; padding: 8px 16px;">
+                                                                                                            ⏳ Proses
+                                                                                                        </a>
+                                                                                                        <a class="dropdown-item status-option" href="#"
+                                                                                                            data-status="dikirim"
+                                                                                                            style="font-size: 13px; padding: 8px 16px;">
+                                                                                                            🚚 Dikirim
+                                                                                                        </a>
+                                                                                                        <a class="dropdown-item status-option" href="#"
+                                                                                                            data-status="selesai"
+                                                                                                            style="font-size: 13px; padding: 8px 16px;">
+                                                                                                            ✅ Selesai
+                                                                                                        </a>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                            </td>
+                                                                                            <td class="text-center">
+                                                                                                <div style="display: inline-flex; align-items: center; gap: 6px;">
+                                                                                                    <div style="
+                                                        width: 28px; height: 28px; border-radius: 50%;
+                                                        background-color: #fde8f0; color: #e83e8c;
+                                                        display: flex; align-items: center; justify-content: center;
+                                                        font-size: 12px; flex-shrink: 0;
+                                                    ">
+                                                                                                        <i class="fas fa-user"></i>
+                                                                                                    </div>
+                                                                                                    <span
+                                                                                                        style="font-size: 13px; font-weight: 500; color: #2d2d2d;">
+                                                                                                        {{ optional($outlogistic->user)->name ?? '-' }}
+                                                                                                    </span>
+                                                                                                </div>
+                                                                                            </td>
+                                                                                            <td class="text-center">
+                                                                                                <div class="d-flex justify-content-center" role="group"
+                                                                                                    aria-label="Basic example">
+                                                                                                    <a href="{{ route('outlogistics.show', $outlogistic->id) }}"
+                                                                                                        class="btn btn-success mr-2" title="Detail">
+                                                                                                        <i class="fas fa-eye"></i>
+                                                                                                    </a>
+                                                                                                    <a href="{{ route('outlogistics.edit', $outlogistic->id)}}"
+                                                                                                        class="btn btn-warning mr-2" title="Edit">
+                                                                                                        <i class="fas fa-pencil-alt"></i>
+                                                                                                    </a>
+                                                                                                    <form
+                                                                                                        action="{{ route('outlogistics.destroy', $outlogistic->id) }}"
+                                                                                                        method="POST" class="p-0"
+                                                                                                        onsubmit="return confirm('Delete?')">
+                                                                                                        @csrf
+                                                                                                        @method('DELETE')
+                                                                                                        <button type="submit" class="btn btn-danger" title="Delete">
+                                                                                                            <i class="fas fa-trash-alt"></i>
+                                                                                                        </button>
+                                                                                                    </form>
+                                                                                                </div>
+                                                                                            </td>
+                                                                                        </tr>
                                                 @endforeach
                                             @else
                                                 <tr>
@@ -375,6 +459,58 @@
             });
         }
         document.getElementById('search-input').addEventListener('input', performSearch);
+    </script>
+
+    <script>
+        $(document).on('click', '.status-option', function (e) {
+            e.preventDefault();
+
+            var newStatus = $(this).data('status');
+            var $dropdown = $(this).closest('.status-dropdown');
+            var id = $dropdown.data('id');
+            var $btn = $dropdown.find('.status-btn');
+
+            var statusLabel = {
+                'proses': '⏳ Proses',
+                'dikirim': '🚚 Dikirim',
+                'selesai': '✅ Selesai'
+            };
+
+            $.ajax({
+                url: '/outlogistics/' + id + '/status',
+                type: 'PATCH',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    status: newStatus
+                },
+                success: function (res) {
+                    if (res.success) {
+                        // Update teks tombol
+                        $btn.text(statusLabel[newStatus]);
+
+                        // Update warna tombol
+                        $btn.removeClass('status-proses status-dikirim status-selesai');
+                        $btn.addClass('status-' + newStatus);
+
+                        // Toast notifikasi
+                        const Toast = Swal.mixin({
+                            toast: true,
+                            position: 'top-end',
+                            showConfirmButton: false,
+                            timer: 2500,
+                            timerProgressBar: true,
+                        });
+                        Toast.fire({
+                            icon: 'success',
+                            title: 'Status diperbarui: ' + statusLabel[newStatus]
+                        });
+                    }
+                },
+                error: function () {
+                    Swal.fire('Gagal', 'Terjadi kesalahan saat memperbarui status.', 'error');
+                }
+            });
+        });
     </script>
 
 </body>

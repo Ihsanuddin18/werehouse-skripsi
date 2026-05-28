@@ -263,6 +263,7 @@
                                                 <th style="text-align: center;">Tanggal Masuk</th>
                                                 <th style="text-align: center;">Tanggal Kadaluarsa</th>
                                                 <th style="text-align: center;">Dokumentasi</th>
+                                                <th style="text-align: center;">Petugas</th>
                                                 <th style="text-align: center;">Aksi</th>
                                             </tr>
                                         </thead>
@@ -294,6 +295,21 @@
                                                             <img src="{{ asset($inlogistic->dokumentasi_masuk) }}" width='90'
                                                                 height='90' class="img img-responsive" />
                                                         </td>
+                                                        <td class="text-center">
+    <div style="display: inline-flex; align-items: center; gap: 6px;">
+        <div style="
+            width: 28px; height: 28px; border-radius: 50%;
+            background-color: #e8f0fe; color: #3d5afe;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 12px; flex-shrink: 0;
+        ">
+            <i class="fas fa-user"></i>
+        </div>
+        <span style="font-size: 13px; font-weight: 500; color: #2d2d2d;">
+            {{ optional($inlogistic->user)->name ?? '-' }}
+        </span>
+    </div>
+</td>
                                                         <td class="text-center">
                                                             <div class="d-flex justify-content-center" role="group"
                                                                 aria-label="Basic example">

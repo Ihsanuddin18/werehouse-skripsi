@@ -14,6 +14,7 @@ class Inlogistic extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'user_id',
         'id_logistik',
         'id_supplier',
         'jumlah_logistik_masuk',
@@ -38,5 +39,9 @@ class Inlogistic extends Model
     public function logisticrequest()
     {
         return $this->hasMany(LogisticRequest::class, 'id_inlogistik');
+    }
+    public function user()
+    {
+        return $this->belongsTo(\App\Models\User::class, 'user_id');
     }
 }

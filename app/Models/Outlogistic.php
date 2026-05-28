@@ -11,6 +11,7 @@ class Outlogistic extends Model
 {
     use HasFactory;
     protected $fillable = [
+        'user_id',
         'id_logistik',
         'jumlah_logistik_keluar',
         'tanggal_keluar',
@@ -20,20 +21,25 @@ class Outlogistic extends Model
         'alamat_penerima',
         'keterangan_keluar',
         'dokumentasi_keluar',
+        'status',
     ];
 
     public function logistic()
     {
         return $this->belongsTo(Logistic::class, 'id_logistik', 'id');
     }
-    
+
     public function inlogistic()
     {
         return $this->belongsTo(Inlogistic::class, 'id_inlogistik');
     }
 
-     public function logisticrequests()
+    public function logisticrequests()
     {
         return $this->hasMany(LogisticRequest::class, 'id_outlogistik', 'id');
+    }
+    public function user()
+    {
+        return $this->belongsTo(\App\Models\User::class, 'user_id');
     }
 }

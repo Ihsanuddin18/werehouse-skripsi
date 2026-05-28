@@ -15,20 +15,19 @@ class InlogisticController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Inlogistic::with('logistic', 'supplier');
+        $query = Inlogistic::with('logistic', 'supplier', 'user');
 
         $month = $request->input('month');
         $year = $request->input('year');
 
         if ($month && $year) {
             $query->whereYear('tanggal_masuk', $year)
-                  ->whereMonth('tanggal_masuk', $month);
+                ->whereMonth('tanggal_masuk', $month);
         } elseif ($year) {
             $query->whereYear('tanggal_masuk', $year);
         }
 
         $inlogistics = $query->latest()->paginate(15);
-
         $logistics = Logistic::with('inlogistics')->get();
         $suppliers = Supplier::all();
 
@@ -36,9 +35,7 @@ class InlogisticController extends Controller
         $firstYear = $firstYearDate ? date('Y', strtotime($firstYearDate)) : date('Y');
         $currentYear = date('Y');
 
-        // KHUSUS STAFF
         if (Auth::user()->usertype == 'staff') {
-
             return view('staff.inlogistics.index', [
                 'inlogistics' => $inlogistics,
                 'logistics' => $logistics,
@@ -48,7 +45,6 @@ class InlogisticController extends Controller
             ]);
         }
 
-        // KHUSUS USER
         return view('inlogistics.index', [
             'inlogistics' => $inlogistics,
             'logistics' => $logistics,
@@ -67,7 +63,7 @@ class InlogisticController extends Controller
 
         if ($month && $year) {
             $query->whereYear('tanggal_masuk', $year)
-                  ->whereMonth('tanggal_masuk', $month);
+                ->whereMonth('tanggal_masuk', $month);
         } elseif ($year) {
             $query->whereYear('tanggal_masuk', $year);
         }
@@ -81,9 +77,7 @@ class InlogisticController extends Controller
                 : null;
         }
 
-        $pdf = PDF::loadView('pdf.export_inlogistic_pdf', [
-            'inlogistics' => $inlogistics
-        ]);
+        $pdf = PDF::loadView('pdf.export_inlogistic_pdf', ['inlogistics' => $inlogistics]);
 
         return $pdf->download('export_inlogistic_pdf.pdf');
     }
@@ -107,129 +101,141 @@ class InlogisticController extends Controller
         $logistics = Logistic::all();
         $suppliers = Supplier::all();
 
-        // KHUSUS STAFF
         if (Auth::user()->usertype == 'staff') {
             return view('staff.inlogistics.create', compact('logistics', 'suppliers'));
         }
 
-        // KHUSUS USER
         return view('inlogistics.create', compact('logistics', 'suppliers'));
     }
 
+    /**
+     * Store — mendukung penyimpanan BANYAK data sekaligus (array).
+     * Data dikirim dalam format:
+     *   id_logistik[]
+     *   id_supplier[]
+     *   jumlah_logistik_masuk[]
+     *   satuan_logistik[]
+     *   tanggal_masuk[]
+     *   expayer_logistik[]
+     *   keterangan_masuk[]
+     *   dokumentasi_masuk[]   (file, opsional)
+     */
     public function store(Request $request)
     {
+        // ── Validasi array ───────────────────────────────────────────────────
         $request->validate([
-            'id_logistik' => 'required|exists:logistics,id',
-            'id_supplier' => 'required|exists:suppliers,id',
-            'jumlah_logistik_masuk' => 'required|integer',
-            'tanggal_masuk' => 'required|date',
-            'expayer_logistik' => 'required|date',
-            'keterangan_masuk' => 'required|string',
-            'dokumentasi_masuk' => 'nullable|mimes:png,jpg,jpeg,webp',
+            'id_logistik' => 'required|array|min:1',
+            'id_logistik.*' => 'required|exists:logistics,id',
+            'id_supplier' => 'required|array|min:1',
+            'id_supplier.*' => 'required|exists:suppliers,id',
+            'jumlah_logistik_masuk' => 'required|array|min:1',
+            'jumlah_logistik_masuk.*' => 'required|integer|min:1',
+            'tanggal_masuk' => 'required|array|min:1',
+            'tanggal_masuk.*' => 'required|date',
+            'expayer_logistik' => 'required|array|min:1',
+            'expayer_logistik.*' => 'required|date',
+            'keterangan_masuk' => 'required|array|min:1',
+            'keterangan_masuk.*' => 'required|string',
+            'dokumentasi_masuk' => 'nullable|array',
+            'dokumentasi_masuk.*' => 'nullable|mimes:png,jpg,jpeg,webp|max:5120',
         ]);
 
-        $filename = null;
-        $path = null;
+        $idLogistikArr = $request->input('id_logistik');
+        $idSupplierArr = $request->input('id_supplier');
+        $jumlahArr = $request->input('jumlah_logistik_masuk');
+        $tanggalMasukArr = $request->input('tanggal_masuk');
+        $expayerArr = $request->input('expayer_logistik');
+        $keteranganArr = $request->input('keterangan_masuk');
+        $filesArr = $request->file('dokumentasi_masuk') ?? [];
 
-        if ($request->hasFile('dokumentasi_masuk')) {
+        $total = count($idLogistikArr);
+        $path = 'uploads/inlogistic/';
 
-            $file = $request->file('dokumentasi_masuk');
-
-            $extension = $file->getClientOriginalExtension();
-
-            $filename = time() . '.' . $extension;
-
-            $path = 'uploads/inlogistic/';
-
-            $file->move(public_path($path), $filename);
+        // Pastikan folder upload ada
+        if (!File::exists(public_path($path))) {
+            File::makeDirectory(public_path($path), 0755, true);
         }
 
-        Inlogistic::create([
-            'id_logistik' => $request->id_logistik,
-            'id_supplier' => $request->id_supplier,
-            'jumlah_logistik_masuk' => $request->jumlah_logistik_masuk,
-            'tanggal_masuk' => $request->tanggal_masuk,
-            'expayer_logistik' => $request->expayer_logistik,
-            'keterangan_masuk' => $request->keterangan_masuk,
-            'dokumentasi_masuk' => $path . $filename,
-        ]);
+        // ── Loop simpan satu per satu ────────────────────────────────────────
+        for ($i = 0; $i < $total; $i++) {
+            $savedPath = null;
 
-        return redirect()->route('inlogistics.index')
-                         ->with('success', 'Data berhasil ditambahkan!');
+            // Upload file jika ada di index ke-i
+            if (!empty($filesArr[$i]) && $filesArr[$i]->isValid()) {
+                $file = $filesArr[$i];
+                $extension = $file->getClientOriginalExtension();
+                // Gunakan microtime + index agar filename unik antar iterasi
+                $filename = time() . '_' . $i . '_' . uniqid() . '.' . $extension;
+                $file->move(public_path($path), $filename);
+                $savedPath = $path . $filename;
+            }
+
+            Inlogistic::create([
+                'user_id' => Auth::id(),
+                'id_logistik' => $idLogistikArr[$i],
+                'id_supplier' => $idSupplierArr[$i],
+                'jumlah_logistik_masuk' => $jumlahArr[$i],
+                'tanggal_masuk' => $tanggalMasukArr[$i],
+                'expayer_logistik' => $expayerArr[$i],
+                'keterangan_masuk' => $keteranganArr[$i],
+                'dokumentasi_masuk' => $savedPath,
+            ]);
+        }
+
+        return redirect()->route('inlogistics')
+            ->with('success', $total . ' data logistik masuk berhasil ditambahkan!');
     }
 
     public function show(string $id)
     {
         $inlogistic = Inlogistic::findOrFail($id);
-
         $logistics = Logistic::all();
 
-        // KHUSUS STAFF
         if (Auth::user()->usertype == 'staff') {
-            return view(
-                'staff.inlogistics.show',
-                compact('inlogistic', 'logistics')
-            );
+            return view('staff.inlogistics.show', compact('inlogistic', 'logistics'));
         }
 
-        // KHUSUS USER
-        return view(
-            'inlogistics.show',
-            compact('inlogistic', 'logistics')
-        );
+        return view('inlogistics.show', compact('inlogistic', 'logistics'));
     }
 
     public function edit(string $id)
     {
         $inlogistic = Inlogistic::findOrFail($id);
-
         $logistics = Logistic::all();
-
         $suppliers = Supplier::all();
 
-        // KHUSUS STAFF
         if (Auth::user()->usertype == 'staff') {
-
-            return view(
-                'staff.inlogistics.edit',
-                compact('inlogistic', 'logistics', 'suppliers')
-            );
+            return view('staff.inlogistics.edit', compact('inlogistic', 'logistics', 'suppliers'));
         }
 
-        // KHUSUS USER
-        return view(
-            'inlogistics.edit',
-            compact('inlogistic', 'logistics', 'suppliers')
-        );
+        return view('inlogistics.edit', compact('inlogistic', 'logistics', 'suppliers'));
     }
 
     public function update(Request $request, string $id)
     {
         $inlogistic = Inlogistic::findOrFail($id);
-
         $inlogistic->update($request->all());
 
-        return redirect()->route('inlogistics.index')
-                         ->with('success', 'Data berhasil diubah!');
+        return redirect()->route('inlogistics')
+            ->with('success', 'Data berhasil diubah!');
     }
 
     public function destroy($id)
     {
         $inlogistic = Inlogistic::findOrFail($id);
 
-        if (File::exists(public_path($inlogistic->dokumentasi_masuk))) {
+        if ($inlogistic->dokumentasi_masuk && File::exists(public_path($inlogistic->dokumentasi_masuk))) {
             File::delete(public_path($inlogistic->dokumentasi_masuk));
         }
 
         $inlogistic->delete();
 
         $outlogistic = Outlogistic::where('id_inlogistik', $id)->first();
-
         if ($outlogistic) {
             $outlogistic->delete();
         }
 
-        return redirect()->route('inlogistics.index')
-                         ->with('success', 'Data berhasil dihapus!');
+        return redirect()->route('inlogistics')
+            ->with('success', 'Data berhasil dihapus!');
     }
 }

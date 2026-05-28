@@ -105,6 +105,7 @@ Route::middleware(['auth', 'user'])->group(function () {
         Route::get('edit/{id}', 'edit')->name('outlogistics.edit');
         Route::put('edit/{id}', 'update')->name('outlogistics.update');
         Route::delete('destroy/{id}', 'destroy')->name('outlogistics.destroy');
+        Route::patch('{id}/status', 'updateStatus')->name('outlogistics.updateStatus');
         Route::get('/export_outlogistic_pdf', [OutlogisticController::class, 'export_outlogistic_pdf'])->name('export_outlogistic_pdf');
         Route::get('/outlogistics/{id}/export_show_outlogistic_pdf', [OutlogisticController::class, 'export_show_outlogistic_pdf'])->name('export_show_outlogistic_pdf');
     });
@@ -219,4 +220,4 @@ Route::prefix('staff')->middleware(['auth', 'staff'])->group(function () {
 });
 
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

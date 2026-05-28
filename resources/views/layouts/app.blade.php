@@ -71,23 +71,23 @@
               <div class="dropdown-title">
                 @if(Auth::user()->last_login_at)
                   @php
-          $diffInMinutes = Carbon\Carbon::now()->diffInMinutes(Auth::user()->last_login_at);
-          $diffInSeconds = Carbon\Carbon::now()->diffInSeconds(Auth::user()->last_login_at);
-          $hours = floor($diffInMinutes / 60);
-          $remainingMinutes = $diffInMinutes % 60;
-          @endphp
+                    $diffInMinutes = Carbon\Carbon::now()->diffInMinutes(Auth::user()->last_login_at);
+                    $diffInSeconds = Carbon\Carbon::now()->diffInSeconds(Auth::user()->last_login_at);
+                    $hours = floor($diffInMinutes / 60);
+                    $remainingMinutes = $diffInMinutes % 60;
+                  @endphp
                   @if($diffInMinutes > 60)
-            Login {{ $hours }} jam {{ $remainingMinutes }} menit yang lalu
-          @elseif($diffInMinutes > 1)
-        Login {{ $diffInMinutes }} menit yang lalu
-      @elseif($diffInSeconds > 0)
-      Login {{ $diffInSeconds }} detik yang lalu
-    @else
-      Baru Login
-    @endif
-        @else
-      Baru Login
-    @endif
+                    Login {{ $hours }} jam {{ $remainingMinutes }} menit yang lalu
+                  @elseif($diffInMinutes > 1)
+                    Login {{ $diffInMinutes }} menit yang lalu
+                  @elseif($diffInSeconds > 0)
+                    Login {{ $diffInSeconds }} detik yang lalu
+                  @else
+                    Baru Login
+                  @endif
+                @else
+                  Baru Login
+                @endif
               </div>
               <a href="{{ route('profile.edit') }}" class="dropdown-item has-icon">
                 <i class="far fa-user"></i> Profil
@@ -165,26 +165,26 @@
         });
       </script>
       @if(session('loginSuccessNotification'))
-      <script>
-      const Toast = Swal.mixin({
-        toast: true,
-        position: 'top-end',
-        showConfirmButton: false,
-        timer: 9000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-        toast.addEventListener('mouseenter', Swal.stopTimer);
-        toast.addEventListener('mouseleave', Swal.resumeTimer);
-        }
-      });
+        <script>
+          const Toast = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 9000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.addEventListener('mouseenter', Swal.stopTimer);
+              toast.addEventListener('mouseleave', Swal.resumeTimer);
+            }
+          });
 
-      // Tampilkan notifikasi Toast dengan pesan yang diterima dari session
-      Toast.fire({
-        icon: 'success',
-        title: '{{ session('loginSuccessNotification') }}'
-      });
-      </script>
-    @endif
+          // Tampilkan notifikasi Toast dengan pesan yang diterima dari session
+          Toast.fire({
+            icon: 'success',
+            title: '{{ session('loginSuccessNotification') }}'
+          });
+        </script>
+      @endif
 
       <!-- Main Content -->
       <div class="main-content">
@@ -254,20 +254,17 @@
               </div>
             </div>
           </div>
-          <div class="row">
-            <div class="col-12">
-              <div class="card">
-                <div class="card-header">
-                  <h4>Daftar stok data logistik</h4>
-                  <div class="card-header-form">
-                    <form>
+          <div class="row" style="align-items: stretch;">
 
-                    </form>
-                  </div>
+            {{-- Kolom Kiri: Tabel Stok --}}
+            <div class="col-lg-8 col-12" style="display: flex; flex-direction: column;">
+              <div class="card mb-0" style="display: flex; flex-direction: column; height: 520px;">
+                <div class="card-header" style="flex-shrink: 0;">
+                  <h4>Daftar stok data logistik</h4>
                 </div>
-                <div class="table-responsive">
-                  <table class="table table-striped">
-                    <thead class="table-primary">
+                <div style="flex: 1; overflow-y: auto; min-height: 0;">
+                  <table class="table table-striped mb-0">
+                    <thead class="table-primary" style="position: sticky; top: 0; z-index: 1;">
                       <tr>
                         <th style="text-align: center;">No</th>
                         <th style="text-align: center;">Kode Logistik</th>
@@ -277,35 +274,193 @@
                         <th style="text-align: center;">Tanggal Kadaluarsa</th>
                       </tr>
                     </thead>
-                    @php
-            use Carbon\Carbon;
-            @endphp
+                    @php use Carbon\Carbon; @endphp
                     <tbody>
                       @if($inlogistics->count() > 0)
-              @foreach($inlogistics as $inlogistic)
-          <tr>
-          <td class="text-center">{{ $loop->iteration }}</td>
-          <td class="text-center">{{ optional($inlogistic->logistic)->kode_logistik }}</td>
-          <td class="text-center">{{ optional($inlogistic->logistic)->nama_logistik }}</td>
-          <td class="text-center">{{ optional($inlogistic->supplier)->nama_supplier }}</td>
-          <td class="text-center">{{ $inlogistic->jumlah_logistik_masuk }}
-          {{ optional($inlogistic->logistic)->satuan_logistik }}
-          </td>
-          <td class="text-center">
-          {{ Carbon::parse($inlogistic->expayer_logistik)->translatedFormat('l, d F Y') }}
-          </td>
-          </tr>
-        @endforeach
-            @else
-          <tr>
-          <td colspan="6" class="text-center"> Tidak ada data ! </td>
-          </tr>
-        @endif
+                        @foreach($inlogistics as $inlogistic)
+                          <tr>
+                            <td class="text-center">{{ $loop->iteration }}</td>
+                            <td class="text-center">{{ optional($inlogistic->logistic)->kode_logistik }}</td>
+                            <td class="text-center">{{ optional($inlogistic->logistic)->nama_logistik }}</td>
+                            <td class="text-center">{{ optional($inlogistic->supplier)->nama_supplier }}</td>
+                            <td class="text-center">
+                              {{ $inlogistic->jumlah_logistik_masuk }}
+                              {{ optional($inlogistic->logistic)->satuan_logistik }}
+                            </td>
+                            <td class="text-center">
+                              {{ Carbon::parse($inlogistic->expayer_logistik)->translatedFormat('l, d F Y') }}
+                            </td>
+                          </tr>
+                        @endforeach
+                      @else
+                        <tr>
+                          <td colspan="6" class="text-center py-4">Tidak ada data !</td>
+                        </tr>
+                      @endif
                     </tbody>
                   </table>
                 </div>
               </div>
             </div>
+
+            {{-- Kolom Kanan: Mendekati Kadaluarsa + Aktivitas Terbaru --}}
+            <div class="col-lg-4 col-12" style="display: flex; flex-direction: column; gap: 20px; height: 520px;">
+
+              {{-- Card Mendekati Kadaluarsa --}}
+              <div class="card mb-0" style="display: flex; flex-direction: column; flex: 0 0 auto; max-height: 200px;">
+                <div class="card-header" style="flex-shrink: 0; padding: 12px 16px; border-bottom: 1px solid #f0f0f0;">
+                  <div style="display: flex; align-items: center; gap: 8px;">
+                    <div style="
+            width: 28px; height: 28px; border-radius: 50%; background: #fff3cd;
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+          ">
+                      <i class="fas fa-exclamation-triangle" style="color: #e6a817; font-size: 12px;"></i>
+                    </div>
+                    <h4 style="margin: 0; font-size: 14px;">Mendekati Kadaluarsa</h4>
+                    @if(isset($expiringItems) && $expiringItems->count() > 0)
+                              <span style="
+                        margin-left: auto; background: #e6a817; color: #fff;
+                        font-size: 11px; font-weight: 700; padding: 2px 8px;
+                        border-radius: 20px; flex-shrink: 0;
+                      ">{{ $expiringItems->count() }}</span>
+                    @endif
+                  </div>
+                </div>
+                <div style="flex: 1; overflow-y: auto; min-height: 0; padding: 4px 16px;">
+                  @if(isset($expiringItems) && $expiringItems->count() > 0)
+                    @foreach($expiringItems as $item)
+                            @php
+                              $sisaHari = $item['sisa_hari'];
+                              if ($sisaHari == 0) {
+                                $warnaText = '#dc3545';
+                                $warnaBg = '#fdecea';
+                                $labelHari = 'Hari ini kadaluarsa!';
+                              } elseif ($sisaHari <= 2) {
+                                $warnaText = '#dc3545';
+                                $warnaBg = '#fdecea';
+                                $labelHari = 'Kadaluarsa dalam ' . $sisaHari . ' hari';
+                              } elseif ($sisaHari <= 4) {
+                                $warnaText = '#e6a817';
+                                $warnaBg = '#fff3cd';
+                                $labelHari = 'Kadaluarsa dalam ' . $sisaHari . ' hari';
+                              } else {
+                                $warnaText = '#17a2b8';
+                                $warnaBg = '#d1ecf1';
+                                $labelHari = 'Kadaluarsa dalam ' . $sisaHari . ' hari';
+                              }
+                            @endphp
+                            <div style="
+                        display: flex; align-items: center; gap: 10px;
+                        padding: 8px 0;
+                        {{ !$loop->last ? 'border-bottom: 1px solid #f4f4f4;' : '' }}
+                      ">
+                              {{-- Ikon hari --}}
+                              <div style="
+                          width: 32px; height: 32px; border-radius: 50%; flex-shrink: 0;
+                          display: flex; align-items: center; justify-content: center;
+                          background: {{ $warnaBg }}; color: {{ $warnaText }}; font-size: 13px;
+                        ">
+                                <i class="fas fa-calendar-times"></i>
+                              </div>
+
+                              {{-- Nama & label --}}
+                              <div style="flex: 1; min-width: 0;">
+                                <div style="
+                            font-size: 13px; font-weight: 600; color: #2d2d2d;
+                            white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+                          ">{{ $item['nama'] }}</div>
+                                <div style="font-size: 11px; color: {{ $warnaText }}; font-weight: 500; margin-top: 1px;">
+                                  {{ $labelHari }}
+                                </div>
+                              </div>
+
+                              {{-- Tanggal kadaluarsa --}}
+                              <div style="
+                          flex-shrink: 0; font-size: 11px; font-weight: 600;
+                          color: {{ $warnaText }}; background: {{ $warnaBg }};
+                          padding: 3px 8px; border-radius: 20px; white-space: nowrap;
+                        ">
+                                {{ Carbon::parse($item['expayer_logistik'])->translatedFormat('d M Y') }}
+                              </div>
+                            </div>
+                    @endforeach
+                  @else
+                    <div style="text-align: center; padding: 24px 0; color: #aaa;">
+                      <i class="fas fa-check-circle"
+                        style="font-size: 24px; display:block; margin-bottom: 8px; color: #28a745; opacity:.6;"></i>
+                      <span style="font-size: 12px;">Semua stok masih aman</span>
+                    </div>
+                  @endif
+                </div>
+              </div>
+
+              {{-- Card Aktivitas Terbaru --}}
+              <div class="card mb-0" style="display: flex; flex-direction: column; flex: 1; min-height: 0;">
+                <div class="card-header" style="flex-shrink: 0; border-bottom: 1px solid #f0f0f0;">
+                  <h4 style="margin: 0;">Aktivitas Terbaru</h4>
+                </div>
+                <div style="flex: 1; overflow-y: auto; min-height: 0; padding: 4px 16px;">
+                  @if(isset($recentActivities) && $recentActivities->count() > 0)
+                    @foreach($recentActivities as $activity)
+                            @php $isMasuk = $activity['type'] === 'masuk'; @endphp
+                            <div style="
+                        display: flex; align-items: center; gap: 12px;
+                        padding: 10px 0;
+                        {{ !$loop->last ? 'border-bottom: 1px solid #f4f4f4;' : '' }}
+                      ">
+                              {{-- Ikon bulat --}}
+                              <div style="
+                          width: 36px; height: 36px; border-radius: 50%; flex-shrink: 0;
+                          display: flex; align-items: center; justify-content: center;
+                          background-color: {{ $isMasuk ? '#e8f8f0' : '#fdecea' }};
+                          color: {{ $isMasuk ? '#28a745' : '#dc3545' }};
+                          font-size: 14px;
+                        ">
+                                <i class="fas {{ $isMasuk ? 'fa-arrow-down' : 'fa-arrow-up' }}"></i>
+                              </div>
+
+                              {{-- Nama & waktu --}}
+                              <div style="flex: 1; min-width: 0;">
+                                <div
+                                  style="font-size: 11px; color: {{ $isMasuk ? '#28a745' : '#dc3545' }}; font-weight: 600; margin-bottom: 1px; text-transform: uppercase; letter-spacing: 0.4px;">
+                                  {{ $activity['user'] }}
+                                  <span style="color: #aaa; font-weight: 400; text-transform: none; letter-spacing: 0;">
+                                    {{ $isMasuk ? 'menambahkan logistik masuk' : 'mengeluarkan logistik' }}
+                                  </span>
+                                </div>
+                                <div style="
+                            font-size: 13px; font-weight: 600; color: #2d2d2d;
+                            white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px;
+                          ">{{ $activity['nama'] ?? 'Logistik tidak diketahui' }}</div>
+                                <div style="font-size: 11px; color: #aaa;">
+                                  <i class="far fa-clock" style="font-size:10px;"></i>
+                                  {{ \Carbon\Carbon::parse($activity['tanggal'])->translatedFormat('d M Y, H:i') }}
+                                </div>
+                              </div>
+
+                              {{-- Badge jumlah --}}
+                              <div style="
+                          flex-shrink: 0; font-size: 12px; font-weight: 700;
+                          color: {{ $isMasuk ? '#28a745' : '#dc3545' }};
+                          background: {{ $isMasuk ? '#e8f8f0' : '#fdecea' }};
+                          padding: 3px 10px; border-radius: 20px; white-space: nowrap;
+                        ">
+                                {{ $isMasuk ? '+' : '-' }}{{ $activity['jumlah'] }} {{ $activity['satuan'] }}
+                              </div>
+                            </div>
+                    @endforeach
+                  @else
+                    <div style="text-align:center; padding: 60px 0; color: #aaa;">
+                      <i class="fas fa-history"
+                        style="font-size: 28px; display:block; margin-bottom: 10px; opacity:.4;"></i>
+                      <span style="font-size: 13px;">Belum ada aktivitas</span>
+                    </div>
+                  @endif
+                </div>
+              </div>
+
+            </div>{{-- end kolom kanan --}}
+
           </div>
         </section>
       </div>
@@ -366,7 +521,7 @@
       });
     }
 
-    // Tambahkan event listener untuk input pencarian
+    // Tambahkan event listener untuk input pencarian 
     document.getElementById('search-input').addEventListener('input', performSearch);
   </script>
 </body>
