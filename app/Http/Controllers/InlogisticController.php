@@ -122,7 +122,6 @@ class InlogisticController extends Controller
      */
     public function store(Request $request)
     {
-        // ── Validasi array ───────────────────────────────────────────────────
         $request->validate([
             'id_logistik' => 'required|array|min:1',
             'id_logistik.*' => 'required|exists:logistics,id',
@@ -151,39 +150,91 @@ class InlogisticController extends Controller
         $total = count($idLogistikArr);
         $path = 'uploads/inlogistic/';
 
-        // Pastikan folder upload ada
         if (!File::exists(public_path($path))) {
             File::makeDirectory(public_path($path), 0755, true);
         }
 
-        // ── Loop simpan satu per satu ────────────────────────────────────────
+        $addedCount = 0;
+        $mergedCount = 0;
+
         for ($i = 0; $i < $total; $i++) {
-            $savedPath = null;
 
-            // Upload file jika ada di index ke-i
-            if (!empty($filesArr[$i]) && $filesArr[$i]->isValid()) {
-                $file = $filesArr[$i];
-                $extension = $file->getClientOriginalExtension();
-                // Gunakan microtime + index agar filename unik antar iterasi
-                $filename = time() . '_' . $i . '_' . uniqid() . '.' . $extension;
-                $file->move(public_path($path), $filename);
-                $savedPath = $path . $filename;
+            // Cari record existing dengan id_logistik yang sama
+            $existing = Inlogistic::where('id_logistik', $idLogistikArr[$i])->first();
+
+            if ($existing) {
+                // ── GABUNGKAN: tambahkan jumlah ke record yang sudah ada ──────
+                $existing->jumlah_logistik_masuk += (int) $jumlahArr[$i];
+
+                // Update supplier ke supplier terbaru
+                $existing->id_supplier = $idSupplierArr[$i];
+
+                // Update tanggal masuk ke yang terbaru
+                $existing->tanggal_masuk = $tanggalMasukArr[$i];
+
+                // Update kadaluarsa jika yang baru lebih jauh
+                if ($expayerArr[$i] > $existing->expayer_logistik) {
+                    $existing->expayer_logistik = $expayerArr[$i];
+                }
+
+                // Gabungkan keterangan
+                $existing->keterangan_masuk = $existing->keterangan_masuk
+                    . ' | ' . $keteranganArr[$i];
+
+                // Update dokumentasi jika ada file baru
+                if (!empty($filesArr[$i]) && $filesArr[$i]->isValid()) {
+                    // Hapus file lama jika ada
+                    if ($existing->dokumentasi_masuk && File::exists(public_path($existing->dokumentasi_masuk))) {
+                        File::delete(public_path($existing->dokumentasi_masuk));
+                    }
+                    $file = $filesArr[$i];
+                    $extension = $file->getClientOriginalExtension();
+                    $filename = time() . '_' . $i . '_' . uniqid() . '.' . $extension;
+                    $file->move(public_path($path), $filename);
+                    $existing->dokumentasi_masuk = $path . $filename;
+                }
+
+                $existing->user_id = Auth::id();
+                $existing->save();
+
+                $mergedCount++;
+
+            } else {
+                // ── BARU: buat record baru ────────────────────────────────────
+                $savedPath = null;
+
+                if (!empty($filesArr[$i]) && $filesArr[$i]->isValid()) {
+                    $file = $filesArr[$i];
+                    $extension = $file->getClientOriginalExtension();
+                    $filename = time() . '_' . $i . '_' . uniqid() . '.' . $extension;
+                    $file->move(public_path($path), $filename);
+                    $savedPath = $path . $filename;
+                }
+
+                Inlogistic::create([
+                    'user_id' => Auth::id(),
+                    'id_logistik' => $idLogistikArr[$i],
+                    'id_supplier' => $idSupplierArr[$i],
+                    'jumlah_logistik_masuk' => $jumlahArr[$i],
+                    'tanggal_masuk' => $tanggalMasukArr[$i],
+                    'expayer_logistik' => $expayerArr[$i],
+                    'keterangan_masuk' => $keteranganArr[$i],
+                    'dokumentasi_masuk' => $savedPath,
+                ]);
+
+                $addedCount++;
             }
-
-            Inlogistic::create([
-                'user_id' => Auth::id(),
-                'id_logistik' => $idLogistikArr[$i],
-                'id_supplier' => $idSupplierArr[$i],
-                'jumlah_logistik_masuk' => $jumlahArr[$i],
-                'tanggal_masuk' => $tanggalMasukArr[$i],
-                'expayer_logistik' => $expayerArr[$i],
-                'keterangan_masuk' => $keteranganArr[$i],
-                'dokumentasi_masuk' => $savedPath,
-            ]);
         }
 
+        // Pesan sukses yang informatif
+        $message = '';
+        if ($addedCount > 0)
+            $message .= $addedCount . ' data baru ditambahkan. ';
+        if ($mergedCount > 0)
+            $message .= $mergedCount . ' data digabung ke logistik yang sudah ada.';
+
         return redirect()->route('inlogistics')
-            ->with('success', $total . ' data logistik masuk berhasil ditambahkan!');
+            ->with('success', trim($message));
     }
 
     public function show(string $id)
